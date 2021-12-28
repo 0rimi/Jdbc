@@ -6,10 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Bookinsert {
-	
+public class BookInsert2 {
+
 	public static void main(String[] args) {
-			
+		
 		// 0. import java.sql.*;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -21,6 +21,7 @@ public class Bookinsert {
 			String url = "jdbc:oracle:thin:@localhost:1521:xe";
 			conn = DriverManager.getConnection(url, "webdb", "webdb");
 			System.out.println("접속성공");
+		
 		// 3. SQL문 준비 / 바인딩 / 실행
 			
 			 //문자열 만들기 --> ? 기호 주의
@@ -32,6 +33,8 @@ public class Bookinsert {
 		    //문자열 쿼리문으로 만들기
 		    pstmt = conn.prepareStatement(query);
 		    
+		    ////////////////////////////////////////////////////////////////////
+			//순정만화 강풀/////////////////////////////////////////////////////////
 		    //바인딩
 		    pstmt.setString(1, "순정만화");
 		    pstmt.setString(2, "재미주의");
@@ -41,7 +44,20 @@ public class Bookinsert {
 		    //실행
 		    int count = pstmt.executeUpdate();
 		    
-		    System.out.println(count+"건이 실행되었습니다.");
+		    System.out.println(count+"건이 실행되었습니다.(북)");
+		    
+			////////////////////////////////////////////////////////////////////
+			//오직두사람 김영하/////////////////////////////////////////////////////////
+			//바인딩
+			pstmt.setString(1, "오직두사람");
+			pstmt.setString(2, "문학동네");
+			pstmt.setString(3, "2017-05-04");
+			pstmt.setInt(4, 6);
+
+		    
+		    //실행
+		    int count2 = pstmt.executeUpdate();
+		    System.out.println(count2+"건이 실행되었습니다.");
 			
 		// 4.결과처리
 		} catch (ClassNotFoundException e) {
@@ -66,5 +82,8 @@ public class Bookinsert {
 		}
 
 	}
+		
+		
+
 
 }

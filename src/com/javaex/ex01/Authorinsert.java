@@ -39,8 +39,8 @@ public class Authorinsert {
 		    pstmt = conn.prepareStatement(query);
 		    
 		    //바인딩
-		    pstmt.setString(1, "이문열");     //첫번째 물음표 데이터
-		    pstmt.setString(2, "경북 영양");  //두번째 물음표 데이터
+		    pstmt.setString(1, "기안84");     //첫번째 물음표 데이터
+		    pstmt.setString(2, "기안동에서 산 84년생");  //두번째 물음표 데이터
 		    
 		    //실행
 		    int count = pstmt.executeUpdate();

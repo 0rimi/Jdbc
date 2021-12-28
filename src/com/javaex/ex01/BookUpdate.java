@@ -37,11 +37,11 @@ public class BookUpdate {
 			pstmt = conn.prepareStatement(query);
 			
 			//바인딩
-			pstmt.setString(1, "삼국지");
-			pstmt.setString(2, "민음사");
-			pstmt.setString(3, "2002-03-01");
-			pstmt.setInt(4, 2);
-			pstmt.setInt(5, 2);
+			pstmt.setString(1, "순정만화");
+			pstmt.setString(2, "재미주의");
+			pstmt.setString(3, "2011-08-03");
+			pstmt.setInt(4, 5);
+			pstmt.setInt(5, 3);
 			
 			//실행
 			int count = pstmt.executeUpdate();
