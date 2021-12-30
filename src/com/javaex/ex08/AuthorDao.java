@@ -1,6 +1,6 @@
 //Dao만들기, AuthorVo 사용하기, 공통변수 빼기
 
-package com.javaex.ex04;
+package com.javaex.ex08;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -78,7 +78,6 @@ public class AuthorDao {
 			String query = "";
 		    query += "insert into author";
 		    query += " values(seq_author_id.nextval,?,?)";
-		    System.out.println(query);
 		    
 		    //문자열 쿼리문으로 만들기
 		    pstmt = conn.prepareStatement(query);
@@ -158,7 +157,7 @@ public class AuthorDao {
 			
 			//실행
 			int count = pstmt.executeUpdate();
-			System.out.println(count+"건이 업데이트 되었습니다.");
+			System.out.println(count+"건이 업데이트 되었습니다.(작가)");
 			
 		}catch (SQLException e) {
 		System.out.println("error:" + e);

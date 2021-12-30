@@ -1,4 +1,4 @@
-package com.javaex.ex07;
+package com.javaex.ex08;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -61,7 +61,7 @@ public class BookAllDao {
 	
 	
 	
-	public void BookAllInsert(String title, String pubs, String pubDate, int authorId) {
+	public void BookInsert(BookallVo bookallvo) {
 
 		this.getconnection();
 
@@ -73,20 +73,19 @@ public class BookAllDao {
 			String query = "";
 			query += " INSERT into book ";
 			query += " VALUES(seq_book_id.nextval, ?, ?, ?, ?) ";
-			System.out.println(query);
 					    
 		    //문자열 쿼리문으로 만들기
 		    pstmt = conn.prepareStatement(query);
 		    
 		    //바인딩
-		    pstmt.setString(1, title);
-		    pstmt.setString(2, pubs);
-		    pstmt.setString(3, pubDate);
-		    pstmt.setInt(4, authorId);
+		    pstmt.setString(1, bookallvo.getTitle());
+		    pstmt.setString(2, bookallvo.getPubs());
+		    pstmt.setString(3, bookallvo.getPubDate());
+		    pstmt.setInt(4, bookallvo.getAuthorId());
 		    
 		    //실행
 		    int count = pstmt.executeUpdate();
-		    System.out.println(count+"건이 저장되었습니다.(작가)");
+		    System.out.println(count+"건이 저장되었습니다.(책)");
     
 		} catch (SQLException e) {
 		    System.out.println("error:" + e);
@@ -96,7 +95,7 @@ public class BookAllDao {
 		
 	}
 	
-	public void BookAllDelete(int index) {
+	public void BookDelete(int index) {
 		
 		this.getconnection();
 		
@@ -128,7 +127,7 @@ public class BookAllDao {
 		
 	}
 	
-	public void BookAllUpdate(int index, String title, String pubs, String pubDate, int authorId) {
+	public void BookUpdate(BookallVo bvo) {
 		
 		this.getconnection();
 		
@@ -144,21 +143,20 @@ public class BookAllDao {
 		query += " 		pub_date = ?, ";
 		query += " 		author_id = ? ";
 		query += " where book_id = ? ";
-		System.out.println(query);
 		
 		//문자열을 쿼리문으로 만들기
 		pstmt = conn.prepareStatement(query);
 		
 		//바인딩
-		pstmt.setString(1, title);
-		pstmt.setString(2, pubs);
-		pstmt.setString(3, pubDate);
-		pstmt.setInt(4, authorId);
-		pstmt.setInt(5, index);
+		pstmt.setString(1, bvo.getTitle());
+		pstmt.setString(2, bvo.getPubs());
+		pstmt.setString(3, bvo.getPubDate());
+		pstmt.setInt(4, bvo.getAuthorId());
+		pstmt.setInt(5, bvo.getBookId());
 		
 		//실행
 		int count = pstmt.executeUpdate();
-		System.out.println(count+"건이 업데이트 되었습니다.");
+		System.out.println(count+"건이 업데이트 되었습니다.(책)");
 		
 		
 		// 4.결과처리
@@ -197,6 +195,73 @@ public class BookAllDao {
 			pstmt = conn.prepareStatement(query);
 			
 			//바인딩 생략(물음표가 없음)
+			
+			//실행(update 아니고 query)
+			rs = pstmt.executeQuery();
+			
+			// 4.결과처리
+			while(rs.next()) {
+				int bookId = rs.getInt("book_id");	//순서알때는 컬럼 순서로 적어도 됨
+				String title = rs.getString("title");
+				String pubs = rs.getString("pubs");
+				String pubDate = rs.getString(4);
+				int authorId = rs.getInt("author_id");
+				String authorName = rs.getString("author_name");
+				String authorDesc = rs.getString("author_desc");
+				
+				//bookAllVo 1열이라고 생각하고 각 정보 넣어주기
+				BookallVo bookallVo = new BookallVo(bookId, title, pubs, pubDate, authorId, authorName, authorDesc);
+				//넣어준 각 bookAllVo(의주소)를 리스트에 add해주기
+				bookallList.add(bookallVo);
+				
+				
+			}
+		} catch (SQLException e) {
+		System.out.println("error:" + e);
+		} 
+		
+		this.close();
+						
+		return bookallList; //코드가 닫히기전에 주소를 뱉어내야함.
+				
+		
+	}
+	
+	//셀렉트를 할거긴 한데 특정 문자가 있는것을 할거야!
+	public List<BookallVo> search(String str) {
+		
+		//List만들기~
+		List<BookallVo> bookallList = new ArrayList<BookallVo>();
+		//작가데이터 가져오기
+		
+		this.getconnection();
+		
+		try {
+		
+			// 3. SQL문 준비 / 바인딩 / 실행
+			//문자열 만들기
+			String query = "";
+			query += " SELECT b.book_id, ";
+			query += " 		  b.title, ";
+			query += " 		  b.pubs, ";
+			query += " 		  to_char(b.pub_date,'YYYY-MM-DD') pub_date, ";
+			query += " 		  a.author_id, ";
+			query += " 		  a.author_name, ";
+			query += " 		  a.author_desc ";
+			query += " FROM book b full outer join  author a ";
+			query += " ON b.author_id = a.author_id ";
+			query += " WHERE title LIKE ? ";
+			query += " OR pubs LIKE ? ";
+			query += " OR author_name LIKE ? ";
+			 
+			
+			//문자열을 쿼리문으로 만들기
+			pstmt = conn.prepareStatement(query);
+			
+			//바인딩
+			pstmt.setString(1, "%"+str+"%");
+			pstmt.setString(2, "%"+str+"%");
+			pstmt.setString(3, "%"+str+"%");
 			
 			//실행(update 아니고 query)
 			rs = pstmt.executeQuery();
